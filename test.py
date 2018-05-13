@@ -1,17 +1,9 @@
 import numpy as np
 from matplotlib import pyplot as plt
+from scipy.stats import t, norm
 
-y = [1, 1, 3, 3, 6, 8, 11]
-def Q(med):
-    err = 0
-    for yi in y:
-        err = err + abs(med - yi)
-    return err / len(y)
-
-medians = range(11)
-all_Q = [Q(med) for med in medians]
-#
-plt.plot(medians, all_Q, 'r-', lw=5, alpha=0.6, color="red")
-plt.ylabel('Q')
-plt.xlabel('median')
-plt.show()
+Z = norm.ppf(1 - float(0.04/2))
+p = 0.6
+n = 100
+P = (p*(1-p)/n) ** 0.5
+res = (p - Z * P, p + Z * P)
