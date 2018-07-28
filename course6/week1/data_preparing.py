@@ -1,11 +1,3 @@
-# Реализуйте функцию *prepare_train_set*, которая принимает на вход путь к каталогу
-# с csv-файлами *path_to_csv_files* и параметр *session_length* – длину сессии, а возвращает 2 объекта:
-# - DataFrame, в котором строки соответствуют уникальным сессиям из *session_length* сайтов, *session_length* столбцов
-# – индексам этих *session_length* сайтов и последний столбец – ID пользователя
-#
-# - частотный словарь сайтов вида {'site_string': [site_id, site_freq]}, например для недавнего игрушечного
-# примера это будет {'vk.com': (1, 2), 'google.com': (2, 2), 'yandex.ru': (3, 3), 'facebook.com': (4, 1)}
-
 from __future__ import division, print_function
 # отключим всякие предупреждения Anaconda
 import warnings
@@ -15,16 +7,12 @@ from glob import glob
 import os
 import json
 import pickle
-# pip install tqdm
 import numpy as np
 import pandas as pd
 from scipy.sparse import csr_matrix
 
 
-def prepare_train_set(path_to_csv_files, session_length=10):
-    pass
-
-path = "/Users/nikita/PycharmProjects/ML_Tasks/course6/capstone_user_identification/"
+path = "/home/nikita/Desktop/some/help/bl/course/1/2.1/course6/capstone_user_identification/"
 uspath150 = path + "150users/"
 uspath10 = path + "10users/"
 uspath3 = path + "3users/"
@@ -102,8 +90,7 @@ class SessionParser:
             self.res.values[i][M - 1] = u_data_id[1]
             # calculating begin and end for this session in userDataFrame
             self.process_session(u_data_id[0], i, sbegin)
-            sbegin+=self.swindow
-
+            sbegin += self.swindow
 
     def parse_dir(self):
         user_dfs = []  #
@@ -133,8 +120,8 @@ class SessionParser:
 import sys
 
 #
-# parser10 = SessionParser(uspath10)
-# parser10.parse_dir()
+parser10 = SessionParser(uspath10)
+parser10.parse_dir()
 # s1 = sum(parser10.Nsessions_for_user)
 # print(parser10.res.shape)
 # sys.stdout.flush()
@@ -145,7 +132,6 @@ import sys
 # # #
 parser150 = SessionParser(uspath150, 10, 5)
 parser150.parse_dir()
-s2 = sum(parser150.Nsessions_for_user)
 
 # print(parser150.res.shape[0])
 # sys.stdout.flush()
@@ -162,16 +148,16 @@ parser3.parse_dir()
 # # site_list = sorted(site_list, key=lambda x: x[1][1], reverse=True)
 # # print(site_list[:10])
 # #www.linkedin.com
-# res_path = "/home/nikita/Desktop/some/help/bl/course/1/2.1/course6/week1/"
-# # parser10.res.to_csv(res_path + "train_data_10users.csv", index_label='session_id', float_format='%d')
-# # parser150.res.to_csv(res_path + "train_data_150users.csv", index_label='session_id', float_format='%d')
-# #parser3.res.to_csv(res_path + "train_data_3users.csv", index_label='session_id', float_format='%d')
-# def write_json(parser, fname):
-#     json_res = json.dumps(parser.sites, ensure_ascii=False)
-#     filename = res_path + fname + ".json"
-#     f = open(filename, "w+")
-#     f.write(json_res)
-#
-# print("Writing")
-# write_json(parser10, "sites10")
-# write_json(parser150, "sites150")
+res_path = "/home/nikita/Desktop/some/help/bl/course/1/2.1/course6/week1/"
+parser10.res.to_csv(res_path + "train_data_10users.csv", index_label='session_id', float_format='%d')
+parser150.res.to_csv(res_path + "train_data_150users.csv", index_label='session_id', float_format='%d')
+parser3.res.to_csv(res_path + "train_data_3users.csv", index_label='session_id', float_format='%d')
+def write_json(parser, fname):
+    json_res = json.dumps(parser.sites, ensure_ascii=False)
+    filename = res_path + fname + ".json"
+    f = open(filename, "w+")
+    f.write(json_res)
+
+print("Writing")
+write_json(parser10, "sites10")
+write_json(parser150, "sites150")

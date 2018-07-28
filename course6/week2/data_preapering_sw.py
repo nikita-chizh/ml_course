@@ -5,41 +5,11 @@ import pickle
 from scipy.sparse import csr_matrix
 from collections import Counter
 
-path = "/Users/nikita/PycharmProjects/ML_Tasks/course6/capstone_user_identification/"
+path = "/home/nikita/Desktop/some/help/bl/course/1/2.1/course6/capstone_user_identification/"
 uspath150 = path + "150users/"
 uspath10 = path + "10users/"
 uspath3 = path + "3users/"
 
-# Сощлось с точностью до перестановки строк
-# Код проверки
-# X, y = create_sparce(uspath3)
-# My
-#  [0 2 1 0 2 0 0 0 0 0 0] [2, 2, 0, 1, 0, 0, 0, 0, 0, 0, 0]
-#  [0 1 0 0 1 0 0 0 0 0 0] [0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0]
-#  [2 2 0 1 0 0 0 0 0 0 0] [0, 2, 1, 0, 0, 2, 0, 0, 0, 0, 0]
-#  [3 1 0 0 0 1 0 0 0 0 0] [0, 3, 1, 0, 0, 0, 1, 0, 0, 0, 0]
-#  [1 0 0 2 0 1 1 0 0 0 0] [1, 0, 0, 2, 1, 0, 0, 0, 0, 0, 1]
-#  [1 1 0 2 0 0 0 0 0 0 0] [1, 1, 0, 2, 0, 0, 0, 0, 0, 0, 0]
-#  [0 1 0 0 0 0 0 0 0 0 0] -
-#  [0 3 1 0 0 0 0 1 0 0 0] -
-#  [1 1 0 0 0 1 0 1 1 0 0] -
-#  [0 0 1 0 0 1 0 0 1 1 1] -
-#  [3 0 1 0 0 0 0 0 0 0 1] -
-#  [2 0 0 0 0 0 0 0 0 0 0] -
-# X_toy_s5_w3.todense()
-#
-# matrix([[0, 3, 1, 0, 0, 0, 1, 0, 0, 0, 0], 3
-#         [1, 1, 0, 0, 1, 0, 1, 1, 0, 0, 0], 8
-#         [0, 0, 1, 0, 1, 0, 0, 1, 1, 1, 0], 9
-#         [3, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0], 7
-#         [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],  11
-#         [0, 2, 1, 0, 0, 2, 0, 0, 0, 0, 0], 2
-#         [0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0], 1
-#         [2, 2, 0, 1, 0, 0, 0, 0, 0, 0, 0], 0
-#         [3, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0], 10
-#         [1, 0, 0, 2, 1, 0, 0, 0, 0, 0, 1], 4
-#         [1, 1, 0, 2, 0, 0, 0, 0, 0, 0, 0], 5
-#         [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0]]) 6
 
 def to_sparce_df(df, site_dict):
     N = df.shape[0]  # кол во сессий
@@ -67,7 +37,6 @@ def create_sparce(path, session_length=5, swindow=3):
     parser = SessionParser(path, session_length=session_length, swindow=swindow)
     parser.parse_dir()
     X, y = to_sparce_df(parser.res, parser.sites)
-    X = csr_matrix(X)
     return X, y
 
 
@@ -169,31 +138,49 @@ class SessionParser:
             self.one_file(user_dfs[i], start, i)
             start += self.Nsessions_for_user[i]
 
-# X, y = create_sparce(uspath3)
-# print((X.todense()))
+
+# [14061, 20087, 20087, 20087, 28118, 28118, 28118, 28118, 137019, 195712, 195712, 195712, 273957, 273957, 273957, 273957]
 #
-PATH_TO_SAVE = "/Users/nikita/PycharmProjects/ML_Tasks/course6/week2/res/res10"
 import itertools
 
 data_lengths = []
 
-for path in [uspath10]:
-    for window_size, session_length in itertools.product([10, 7, 5], [15, 10, 7, 5]):
-        if window_size <= session_length and (window_size, session_length) != (10, 10):
-            X, y = create_sparce(path, session_length, window_size)
-            namex = "X" + str(window_size) + "_" + str(session_length) + ".pkl"
-            namey = "y" + str(window_size) + "_" + str(session_length) + ".pkl"
-            with open(os.path.join(PATH_TO_SAVE, namex), 'wb') as handler:
-                pickle.dump(X, handler, protocol=2)
-            with open(os.path.join(PATH_TO_SAVE, namey), 'wb') as handler:
-                pickle.dump(y, handler, protocol=2)
-            data_lengths.append(X.shape[0])
-            print(data_lengths)
+res_path = "/home/nikita/Desktop/some/help/bl/course/1/2.1/course6/capstone_user_identification/sparce_res/"
+i = 0
+
+X, y = create_sparce(uspath10, 10, 10)
+i = 16
+fpref = str(i) + "_" + str(10) + "_" + str(10) + ".dat"
+fX = res_path + 'X' + fpref
+fY = res_path + 'Y' + fpref
+with open(fX, 'wb') as f:
+    pickle.dump(X, f, protocol=2)
+with open(fY, 'wb') as f:
+    pickle.dump(y, f, protocol=2)
 
 
-# X, y = create_sparce(parser3)
-# with open(os.path.join(PATH_TO_DATA, 'X.pkl'), 'wb') as X10_pkl:
-#     pickle.dump(X, X10_pkl, protocol=2)
-#
-# with open(os.path.join(PATH_TO_DATA, 'y.pkl'), 'wb') as y_pkl:
-#     pickle.dump(y, y_pkl, protocol=2)
+i = 17
+X, y = create_sparce(uspath150, 10, 10)
+fpref = str(i) + "_" + str(10) + "_" + str(10) + ".dat"
+fX = res_path + 'X' + fpref
+fY = res_path + 'Y' + fpref
+with open(fX, 'wb') as f:
+    pickle.dump(X, f, protocol=2)
+with open(fY, 'wb') as f:
+    pickle.dump(y, f, protocol=2)
+
+
+# for path in [uspath10, uspath150]:
+#     for window_size, session_length in itertools.product([10, 7, 5], [15, 10, 7, 5]):
+#         if window_size <= session_length and (window_size, session_length) != (10, 10):
+#             X, y = create_sparce(path, session_length, window_size)
+#             data_lengths.append(X.shape[0])
+#             fpref = str(i) + "_" + str(session_length) + "_" + str(window_size) + ".dat"
+#             fX = res_path + 'X' + fpref
+#             fY = res_path + 'Y' + fpref
+#             i += 1
+#             with open(fX, 'wb') as f:
+#                 pickle.dump(X, f, protocol=2)
+#             with open(fY, 'wb') as f:
+#                 pickle.dump(y, f, protocol=2)
+#             print(data_lengths)
